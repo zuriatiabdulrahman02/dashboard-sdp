@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dashboard Pelaporan Mingguan SDP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --color-fg: #14213D; --color-fg-muted: #5B6476; --color-bg: #FFFFFF; --color-panel: #FFFFFF; --color-border-line: #E3E8EF;
+  --color-ok: #16A34A; --color-bad: #DC2626; --color-warn: #D97706;
+  --font-anthropic-sans: "Plus Jakarta Sans", "Segoe UI", system-ui, sans-serif; --font-anthropic-serif: "DM Serif Display", Georgia, serif;
+  --cds-font-size-caption: 13px; --cds-font-size-body: 15px; --cds-font-size-heading: 18px; --cds-font-size-title: 28px; --cds-font-weight-medium: 600;
+  --cds-gap-xs: 4px; --cds-gap-sm: 8px; --cds-gap-md: 14px; --cds-gap-lg: 20px; --cds-gap-xl: 26px;
+  --cds-pad-xs: 4px; --cds-pad-sm: 8px; --cds-pad-md: 14px; --cds-pad-lg: 20px; --cds-pad-xl: 32px; --cds-radius: 10px;
+  --cds-text-secondary: #6B7280; --cds-chart-grid: #E5E7EB; --cds-chart-axis: #CBD5E1; --cds-chart-muted: #94A3B8;
+  --cds-surface-popover: #FFFFFF; --cds-border: #E3E8EF; --cds-shadow-popover: 0 8px 24px rgba(15, 23, 42, .14);
+  --cds-dur-slow: .25s; --cds-ease-out: cubic-bezier(.2, .8, .2, 1);
+  --halaman: #F3F6FA;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --color-fg: #E6EAF2; --color-fg-muted: #9AA4B5; --color-bg: #161B22; --color-panel: #1C222B; --color-border-line: #2C3440;
+    --color-ok: #22C55E; --color-bad: #F87171; --color-warn: #F59E0B; --cds-text-secondary: #9AA4B5; --cds-chart-grid: #2C3440; --cds-chart-axis: #3A4452;
+    --cds-surface-popover: #222A35; --cds-border: #33404F; --cds-shadow-popover: 0 8px 24px rgba(0, 0, 0, .5); --halaman: #10141A; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--halaman); color: var(--color-fg); font-family: var(--font-anthropic-sans); font-size: var(--cds-font-size-body); line-height: 1.45; }
+.wadah { max-width: 1180px; margin: 0 auto; padding: 24px 16px 48px; }
+.dash-select { appearance: none; -webkit-appearance: none; font: inherit; font-size: var(--cds-font-size-body); color: var(--color-fg); background-color: var(--color-bg);
+  border: 1px solid var(--color-border-line); border-radius: 999px; padding: 7px 36px 7px 14px; min-width: 0; cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 14px center; }
+.dash-select:focus { outline: 2px solid #2E75B6; outline-offset: 1px; }
+.dash-skeleton { position: relative; color: transparent !important; min-height: 1em; border-radius: 8px; background: linear-gradient(90deg, var(--color-border-line) 25%, color-mix(in srgb, var(--color-border-line) 40%, transparent) 50%, var(--color-border-line) 75%); background-size: 200% 100%; animation: sk 1.4s infinite linear; }
+@keyframes sk { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+.lp-pillbtn { cursor: pointer; font: inherit; font-size: var(--cds-font-size-caption); }
+.lp-pillbtn:hover { background: rgba(255,255,255,.22); }
+.lp-foot { text-align: center; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0; }
+.lp-linkbtn { background: none; border: 0; color: #2E75B6; font: inherit; cursor: pointer; text-decoration: underline; padding: 0; }
+/* Skrin kod akses */
+.pintu { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
+  background: radial-gradient(circle at 85% 10%, rgba(255,255,255,.12) 0 140px, transparent 141px), linear-gradient(135deg, #12304D 0%, #1F4E79 50%, #2E75B6 100%); }
+.pintu[hidden] { display: none; }
+.pintu-kad { width: min(420px, 100%); background: var(--color-panel); color: var(--color-fg); border-radius: 18px; padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,.35); text-align: center; }
+.pintu-kad h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 26px; margin: 10px 0 6px; line-height: 1.2; }
+.pintu-kad p { color: var(--color-fg-muted); font-size: 14px; margin: 0 0 18px; }
+.pintu-logo { width: 56px; height: 56px; border-radius: 16px; margin: 0 auto; display: grid; place-items: center; background: #1F4E79; color: #fff; }
+.pintu-kad input { width: 100%; font: inherit; font-size: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); text-align: center; letter-spacing: .05em; }
+.pintu-kad input:focus { outline: 2px solid #2E75B6; outline-offset: 1px; }
+.pintu-kad button { width: 100%; margin-top: 12px; font: inherit; font-weight: 600; font-size: 15px; padding: 12px; border: 0; border-radius: 12px; background: #1F4E79; color: #fff; cursor: pointer; }
+.pintu-kad button:hover { background: #2E75B6; }
+.pintu-kad button:disabled { opacity: .6; cursor: wait; }
+.pintu-ralat { color: var(--color-bad) !important; font-size: 13px !important; margin: 12px 0 0 !important; min-height: 1.2em; }
+.lp { --lp-navy: #1F4E79; --lp-deep: #12304D; --lp-blue: #2E75B6; --lp-mint: #6EE7A8; --lp-amber: #F5B942;
+  --lp-ok: var(--color-ok); --lp-bad: var(--color-bad); --lp-warn: var(--color-warn);
+  display: flex; flex-direction: column; gap: var(--cds-gap-xl); }
+.lp h2 { font-size: var(--cds-font-size-heading); font-weight: var(--cds-font-weight-medium); margin: 0; }
+.lp-desc { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 4px 0 var(--cds-gap-md); line-height: 1.5; }
+.lp-sechead { display: flex; align-items: center; gap: 10px; }
+.lp-ico { width: 34px; height: 34px; border-radius: 10px; display: inline-grid; place-items: center; flex: none; background: color-mix(in srgb, var(--lp-blue) 14%, transparent); color: var(--lp-blue); }
+.lp-ico svg { width: 18px; height: 18px; }
+.lp-ico.ok { background: color-mix(in srgb, var(--lp-ok) 16%, transparent); color: var(--lp-ok); }
+.lp-ico.bad { background: color-mix(in srgb, var(--lp-bad) 14%, transparent); color: var(--lp-bad); }
+.lp-ico.warn { background: color-mix(in srgb, var(--lp-warn) 18%, transparent); color: var(--lp-warn); }
+
+/* Hero */
+.lp-hero { position: relative; overflow: hidden; border-radius: calc(var(--cds-radius) * 2); padding: var(--cds-pad-xl); color: #fff;
+  background: radial-gradient(circle at 92% 8%, rgba(255,255,255,.16) 0 120px, transparent 121px), radial-gradient(circle at 78% 110%, rgba(110,231,168,.18) 0 160px, transparent 161px), linear-gradient(135deg, var(--lp-deep) 0%, var(--lp-navy) 48%, var(--lp-blue) 100%);
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--cds-gap-xl); align-items: center; }
+@media (max-width: 640px) { .lp-hero { grid-template-columns: 1fr; } }
+.lp-kicker { font-size: var(--cds-font-size-caption); letter-spacing: .08em; text-transform: uppercase; opacity: .8; margin: 0 0 6px; }
+.lp-hero h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: clamp(1.6rem, 3.4vw, 2.3rem); line-height: 1.15; margin: 0 0 10px; color: #fff; }
+.lp-take { margin: 0 0 var(--cds-gap-md); line-height: 1.6; max-width: 46em; color: rgba(255,255,255,.92); }
+.lp-take b { color: #fff; font-variant-numeric: tabular-nums; background: rgba(255,255,255,.14); padding: 1px 7px; border-radius: 6px; font-weight: var(--cds-font-weight-medium); }
+.lp-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.lp-pill { display: inline-flex; align-items: center; gap: 6px; font-size: var(--cds-font-size-caption); background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.22); padding: 4px 12px; border-radius: 999px; color: #fff; }
+.lp-pill .lp-live { width: 7px; height: 7px; border-radius: 50%; background: var(--lp-mint); box-shadow: 0 0 0 3px rgba(110,231,168,.25); }
+.lp-ring { width: 190px; min-height: 190px; position: relative; justify-self: center; }
+.lp-ring svg { display: block; }
+.lp-ring-c { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; pointer-events: none; }
+.lp-ring-c b { display: block; font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.4rem; line-height: 1; color: #fff; }
+.lp-ring-c span { font-size: var(--cds-font-size-caption); opacity: .85; }
+
+/* Tiles */
+.lp-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--cds-gap-md); }
+.lp-card { background: var(--color-panel); border: 1px solid var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-lg); min-width: 0; }
+.lp-tile { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 6px; }
+.lp-tile::before { content: ""; position: absolute; inset: 0 0 auto 0; height: 4px; background: var(--lp-blue); }
+.lp-tile.ok::before { background: var(--lp-ok); } .lp-tile.bad::before { background: var(--lp-bad); } .lp-tile.warn::before { background: var(--lp-amber); }
+.lp-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.lp-lbl { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lp-big { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 2.3rem; line-height: 1.1; font-variant-numeric: tabular-nums; min-height: 1.1em; }
+.lp-big small { font-size: 1rem; color: var(--color-fg-muted); font-family: var(--font-anthropic-sans); }
+.lp-note { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lp-bar { height: 8px; border-radius: 999px; background: color-mix(in srgb, var(--color-fg) 9%, transparent); overflow: hidden; min-height: 8px; }
+.lp-bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--lp-navy), var(--lp-blue)); }
+
+/* Minggu ini */
+.lp-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--cds-gap-md); }
+.lp-count-badge { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: var(--cds-font-weight-medium); font-size: var(--cds-font-size-caption); padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--color-fg) 7%, transparent); }
+.lp-people { display: grid; grid-template-columns: repeat(auto-fill, minmax(86px, 1fr)); gap: 12px 8px; min-height: 60px; }
+.lp-person { display: flex; flex-direction: column; align-items: center; gap: 6px; background: none; border: 0; padding: 4px; cursor: pointer; font: inherit; color: var(--color-fg); border-radius: var(--cds-radius); text-align: center; }
+.lp-person:hover { background: color-mix(in srgb, var(--color-fg) 5%, transparent); }
+.lp-person span { font-size: 11px; line-height: 1.25; color: var(--color-fg-muted); overflow-wrap: anywhere; }
+.lp-av { width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 600; font-size: 14px; letter-spacing: .02em; position: relative; flex: none; overflow: hidden; }
+.lp-av svg { display: block; width: 100%; height: 100%; }
+.lp-av.sm { width: 26px; height: 26px; font-size: 10px; }
+.lp-av.ok { box-shadow: 0 0 0 3px var(--color-panel), 0 0 0 5px var(--lp-ok); }
+.lp-av.bad { box-shadow: 0 0 0 3px var(--color-panel), 0 0 0 5px var(--lp-bad); }
+.lp-empty { color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+
+/* Bulan */
+.lp-months { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--cds-gap-md); min-height: 150px; }
+.lp-month { border: 1px solid var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-md); display: flex; align-items: center; gap: 12px; background: var(--color-bg); }
+.lp-month.fut { opacity: .6; }
+.lp-month.cur { border-color: var(--lp-blue); box-shadow: 0 0 0 1px var(--lp-blue); }
+.lp-month h3 { margin: 0; font-size: var(--cds-font-size-body); font-weight: var(--cds-font-weight-medium); }
+.lp-month p { margin: 2px 0 0; font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); font-variant-numeric: tabular-nums; }
+.lp-month svg { flex: none; }
+
+/* Carta */
+.lp-chart { position: relative; min-height: 260px; }
+.lp-chart svg { display: block; overflow: visible; }
+.lp-chart .tick text, .lp-chart .lp-axis-t { fill: var(--cds-text-secondary); font-size: var(--cds-font-size-caption); }
+.lp-chart .domain { stroke: var(--cds-chart-axis); }
+.lp-chart .tick line { stroke: var(--cds-chart-grid); }
+.lp-tip { position: absolute; pointer-events: none; background: var(--cds-surface-popover); border: 1px solid var(--cds-border); box-shadow: var(--cds-shadow-popover); border-radius: var(--cds-radius); padding: 8px 12px; font-size: var(--cds-font-size-caption); line-height: 1.45; max-width: 270px; z-index: 5; }
+.lp-tip b { font-weight: var(--cds-font-weight-medium); }
+.lp-tip .lp-tsub { color: var(--cds-text-secondary); }
+
+/* Peta status */
+.lp-ctrl { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; margin-bottom: var(--cds-gap-md); }
+.lp-input { font: inherit; font-size: var(--cds-font-size-body); padding: 7px 12px; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-bg); color: var(--color-fg); min-width: 0; flex: 1 1 180px; max-width: 340px; }
+.lp-input:focus { outline: 2px solid var(--lp-blue); outline-offset: 1px; }
+.lp-legend { display: flex; flex-wrap: wrap; gap: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); }
+.lp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.lp-sw { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.lp-sw-warn { background: var(--lp-amber); border-radius: 50%; width: 8px; height: 8px; display: inline-block; }
+.lp-scroll { overflow-x: auto; min-height: 200px; position: relative; }
+.lp-hm { border-collapse: separate; border-spacing: 4px; font-size: var(--cds-font-size-caption); }
+.lp-hm th { font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); text-align: center; white-space: nowrap; padding: 2px 0; }
+.lp-hm th.lp-nm { text-align: left; position: sticky; left: 0; background: var(--color-panel); padding-right: 10px; color: var(--color-fg); font-weight: 400; z-index: 1; }
+.lp-hm th.lp-nm .lp-nmw { display: flex; align-items: center; gap: 8px; max-width: 200px; }
+.lp-hm th.lp-nm .lp-nmw span { overflow: hidden; text-overflow: ellipsis; }
+.lp-hm th.lp-mo { border-bottom: 2px solid var(--color-border-line); padding-bottom: 4px; }
+.lp-hm th.lp-cur { color: #fff; background: var(--lp-blue); border-radius: 6px; }
+.lp-hm tbody tr:hover th.lp-nm { color: var(--lp-blue); }
+.lp-hm td { padding: 0; }
+.lp-cell { width: 26px; height: 26px; border-radius: 7px; border: 0; padding: 0; cursor: pointer; display: block; position: relative; }
+@media (prefers-reduced-motion: no-preference) { .lp-cell { transition: transform var(--cds-dur-slow) var(--cds-ease-out); } .lp-cell:hover { transform: scale(1.18); } }
+.lp-cell:focus-visible, .lp-cell.lp-sel { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.lp-cell.lp-palsu::after { content: ""; position: absolute; top: -3px; right: -3px; width: 9px; height: 9px; border-radius: 50%; background: var(--lp-amber); box-shadow: 0 0 0 2px var(--color-panel); }
+.lp-s-Dihantar { background: linear-gradient(135deg, color-mix(in srgb, var(--lp-ok) 80%, #fff), var(--lp-ok)); }
+.lp-s-Belum-dihantar { background: linear-gradient(135deg, color-mix(in srgb, var(--lp-bad) 78%, #fff), var(--lp-bad)); }
+.lp-s-Akan-datang { background: transparent; box-shadow: inset 0 0 0 1.5px var(--color-border-line); }
+.lp-s-Diisi-awal { background: color-mix(in srgb, var(--lp-ok) 40%, transparent); box-shadow: inset 0 0 0 1.5px var(--lp-ok); }
+.lp-s-Belum-bertugas { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--color-fg) 14%, transparent) 0 3px, transparent 3px 6px); }
+.lp-hm td.lp-pct { padding-left: 10px; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: var(--cds-font-weight-medium); }
+
+/* Pembaca */
+.lp-view-ctrl { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto; gap: var(--cds-gap-sm); align-items: center; margin-bottom: var(--cds-gap-md); }
+@media (max-width: 560px) { .lp-view-ctrl { grid-template-columns: 1fr; } }
+.lp-view-ctrl .dash-select { width: 100%; }
+.lp-nav { display: flex; gap: 6px; }
+.lp-btn { font: inherit; font-size: var(--cds-font-size-caption); padding: 7px 14px; border: 1px solid var(--color-border-line); border-radius: 999px; background: var(--color-bg); color: var(--color-fg); cursor: pointer; }
+.lp-btn:hover { border-color: var(--lp-blue); color: var(--lp-blue); }
+.lp-strip { display: flex; gap: 4px; flex-wrap: wrap; margin-bottom: var(--cds-gap-md); min-height: 22px; }
+.lp-strip button { width: 22px; height: 22px; border-radius: 6px; border: 0; cursor: pointer; padding: 0; }
+.lp-strip button.lp-sel { outline: 2px solid var(--color-fg); outline-offset: 2px; }
+.lp-meta { display: flex; flex-wrap: wrap; gap: var(--cds-gap-sm); align-items: center; margin-bottom: var(--cds-gap-md); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); min-height: 1.4em; }
+.lp-badge { display: inline-flex; align-items: center; gap: 6px; padding: 3px 12px; border-radius: 999px; font-weight: var(--cds-font-weight-medium); color: #fff; }
+.lp-badge.Dihantar { background: var(--lp-ok); } .lp-badge.Belum-dihantar { background: var(--lp-bad); }
+.lp-badge.Akan-datang, .lp-badge.Belum-bertugas, .lp-badge.Diisi-awal { background: color-mix(in srgb, var(--color-fg) 12%, transparent); color: var(--color-fg); }
+.lp-paper { background: var(--color-bg); border: 1px solid var(--color-border-line); border-left: 4px solid var(--lp-blue); border-radius: var(--cds-radius); padding: var(--cds-pad-md) var(--cds-pad-lg); max-height: 520px; overflow-y: auto; min-height: 120px; }
+.lp-paper.lp-none { color: var(--color-fg-muted); border-left-color: var(--color-border-line); display: grid; place-items: center; text-align: center; }
+.lp-items { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.lp-items li { display: grid; grid-template-columns: 26px minmax(0, 1fr); gap: 10px; line-height: 1.55; overflow-wrap: anywhere; }
+.lp-items li .lp-n { width: 24px; height: 24px; border-radius: 50%; background: color-mix(in srgb, var(--lp-blue) 14%, transparent); color: var(--lp-blue); font-size: 11px; font-weight: 600; display: grid; place-items: center; margin-top: 1px; }
+.lp-items li.lp-plain { grid-template-columns: 1fr; }
+.lp-items li.lp-day { grid-template-columns: 1fr; font-weight: var(--cds-font-weight-medium); color: var(--lp-blue); margin-top: 6px; border-bottom: 1px dashed var(--color-border-line); padding-bottom: 3px; }
+
+/* Carian */
+.lp-results { display: flex; flex-direction: column; gap: var(--cds-gap-sm); min-height: 1.5em; }
+.lp-res { display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; border: 1px solid var(--color-border-line); border-radius: calc(var(--cds-radius) * 1.5); padding: var(--cds-pad-sm) var(--cds-pad-md); background: var(--color-bg); cursor: pointer; text-align: left; font: inherit; color: var(--color-fg); width: 100%; }
+.lp-res:hover { border-color: var(--lp-blue); }
+.lp-res .lp-av { width: 34px; height: 34px; font-size: 12px; }
+.lp-res .lp-rh { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: 3px; }
+.lp-res .lp-rh b { color: var(--color-fg); font-weight: var(--cds-font-weight-medium); }
+.lp-res .lp-rs { line-height: 1.55; overflow-wrap: anywhere; font-size: var(--cds-font-size-body); }
+.lp-res mark { background: color-mix(in srgb, var(--lp-amber) 45%, transparent); color: inherit; border-radius: 3px; padding: 0 2px; }
+.lp-count { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); min-height: 1.2em; }
+.lp-warncard { border-color: color-mix(in srgb, var(--lp-amber) 55%, var(--color-border-line)); background: color-mix(in srgb, var(--lp-amber) 7%, var(--color-panel)); }
+.lp-chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--color-border-line); border-radius: 999px; padding: 3px 12px 3px 3px; font-size: var(--cds-font-size-caption); background: var(--color-bg); cursor: pointer; color: var(--color-fg); font-family: inherit; }
+.lp-chip:hover { border-color: var(--lp-amber); }
+.lp-chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 1.6em; }
+.lp details summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
+.lp details ul { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; }
+.lp-form { border-top: 4px solid var(--lp-blue); }
+.lp-fgrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 2fr); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
+@media (max-width: 640px) { .lp-fgrid { grid-template-columns: 1fr; } }
+.lp-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.lp-field > span { font-size: var(--cds-font-size-caption); font-weight: var(--cds-font-weight-medium); color: var(--color-fg-muted); }
+.lp-field .dash-select { width: 100%; }
+.lp-finfo { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm); font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); margin-bottom: var(--cds-gap-sm); min-height: 1.6em; }
+.lp-textarea { width: 100%; box-sizing: border-box; min-height: 220px; resize: vertical; font: inherit; font-size: var(--cds-font-size-body); line-height: 1.6; padding: var(--cds-pad-md); border: 1px solid var(--color-border-line); border-radius: var(--cds-radius); background: var(--color-bg); color: var(--color-fg); }
+.lp-textarea:focus { outline: 2px solid var(--lp-blue); outline-offset: 1px; }
+.lp-factions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--cds-gap-sm); margin-top: var(--cds-gap-md); }
+.lp-btn.primary { background: var(--lp-navy); border-color: var(--lp-navy); color: #fff; font-weight: var(--cds-font-weight-medium); padding: 8px 18px; }
+.lp-btn.primary:hover { background: var(--lp-blue); border-color: var(--lp-blue); color: #fff; }
+.lp-btn:disabled { opacity: .6; cursor: wait; }
+.lp-msgs { font-size: var(--cds-font-size-caption); }
+.lp-msgs .ok { color: var(--lp-ok); font-weight: var(--cds-font-weight-medium); } .lp-msgs .bad { color: var(--lp-bad); font-weight: var(--cds-font-weight-medium); } .lp-msgs .muted { color: var(--color-fg-muted); }
+.lp-src { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; background: color-mix(in srgb, var(--lp-blue) 14%, transparent); color: var(--lp-blue); font-weight: var(--cds-font-weight-medium); }
+@media print { .lp-paper { max-height: none; } .lp-scroll { overflow: visible; } .lp-hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; } }
+</style>
+</head>
+<body>
+<div class="pintu" id="pintu">
+  <form class="pintu-kad" id="pintu-borang" autocomplete="off">
+    <div class="pintu-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
+    <h1>Pelaporan Mingguan SDP</h1>
+    <p>Sektor Dokumentasi Pendidikan, BPPDP. Masukkan kod akses yang diberikan kepada warga SDP.</p>
+    <input id="pintu-kod" type="password" placeholder="Kod akses" aria-label="Kod akses" required>
+    <button type="submit" id="pintu-masuk">Masuk</button>
+    <p class="pintu-ralat" id="pintu-ralat" role="alert"></p>
+  </form>
+</div>
+<main class="wadah">
+<div class="lp" lang="ms">
+  <header class="lp-hero" id="tajuk">
+    <div>
+      <p class="lp-kicker">BPPDP · Kementerian Pendidikan Malaysia</p>
+      <h1>Pelaporan Mingguan Sektor Dokumentasi Pendidikan</h1>
+      <p class="lp-take" id="rumusan-ayat">Sehingga minggu semasa, <b data-draw="kadarAyat" data-source="kpi" data-field="kadar" data-row="0">—</b> daripada laporan wajib telah dihantar. Bagi minggu ini, <b data-draw="semasaHantar" data-source="kpi" data-field="dihantarSemasa" data-row="0">—</b> daripada <b data-draw="semasaAktif" data-source="kpi" data-field="aktifSemasa" data-row="0">—</b> pegawai telah mengisi laporan.</p>
+      <div class="lp-pills">
+        <span class="lp-pill"><i class="lp-live"></i>Minggu semasa: <span data-draw="semasaLabel">—</span></span>
+        <span class="lp-pill">Ogos – Disember 2026</span>
+        <span class="lp-pill">22 minggu bekerja</span>
+        <button class="lp-pill lp-pillbtn" type="button" id="muat-semula">↻ Muat semula data</button>
+      </div>
+    </div>
+    <div class="lp-ring" data-draw="heroRing" data-source="kpi" id="gauge-keseluruhan"></div>
+  </header>
+
+  <section class="lp-tiles" id="kad-utama">
+    <div class="lp-card lp-tile" id="kad-jumlah">
+      <div class="lp-tile-top"><span class="lp-lbl">Laporan dihantar</span><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg></span></div>
+      <div class="lp-big" data-draw="tJumlah" data-source="kpi" data-field="dihantar" data-row="0">—</div>
+      <div class="lp-bar" data-draw="barJumlah" data-source="kpi"></div>
+      <div class="lp-note">daripada <span data-draw="tWajib" data-source="kpi" data-field="wajib" data-row="0">—</span> laporan wajib setakat ini</div>
+    </div>
+    <div class="lp-card lp-tile ok" id="kad-semasa">
+      <div class="lp-tile-top"><span class="lp-lbl">Dihantar minggu ini</span><span class="lp-ico ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span></div>
+      <div class="lp-big" data-draw="tSemasa">—</div>
+      <div class="lp-bar" data-draw="barSemasa" data-source="kpi"></div>
+      <div class="lp-note" data-draw="tSemasaTarikh">—</div>
+    </div>
+    <div class="lp-card lp-tile bad" id="kad-belum">
+      <div class="lp-tile-top"><span class="lp-lbl">Belum hantar minggu ini</span><span class="lp-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span></div>
+      <div class="lp-big" data-draw="tBelum" data-source="kpi" data-field="belumSemasa" data-row="0">—</div>
+      <div class="lp-note">pegawai masih belum mengisi laporan</div>
+    </div>
+    <div class="lp-card lp-tile warn" id="kad-lengkap">
+      <div class="lp-tile-top"><span class="lp-lbl">Minggu lengkap 100%</span><span class="lp-ico warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></span></div>
+      <div class="lp-big" data-draw="tLengkap" data-source="kpi" data-field="mingguLengkap" data-row="0">—</div>
+      <div class="lp-note">daripada <span data-draw="tLepas" data-source="kpi" data-field="mingguLepas" data-row="0">—</span> minggu, semua pegawai menghantar</div>
+    </div>
+  </section>
+
+  <section class="lp-two" id="minggu-ini">
+    <div class="lp-card" id="sudah-hantar">
+      <div class="lp-sechead"><span class="lp-ico ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><h2>Sudah hantar minggu ini</h2><span class="lp-count-badge" data-draw="nSudah" data-source="kpi" data-field="dihantarSemasa" data-row="0">—</span></div>
+      <p class="lp-desc">Klik pegawai untuk membaca laporannya.</p>
+      <div class="lp-people" data-draw="orangSudah" data-source="status"></div>
+    </div>
+    <div class="lp-card" id="belum-hantar">
+      <div class="lp-sechead"><span class="lp-ico bad"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><h2>Belum hantar minggu ini</h2><span class="lp-count-badge" data-draw="nBelum" data-source="kpi" data-field="belumSemasa" data-row="0">—</span></div>
+      <p class="lp-desc">Klik pegawai untuk melihat status laporannya.</p>
+      <div class="lp-people" data-draw="orangBelum" data-source="status"></div>
+    </div>
+  </section>
+
+  <section class="lp-card lp-form" id="borang">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span><h2>Tulis laporan mingguan</h2></div>
+    <p class="lp-desc">Pilih pegawai, bulan dan minggu, kemudian tulis tugasan minggu tersebut, satu tugasan bagi setiap baris. Laporan yang disimpan di sini menggantikan isi daripada fail Excel bagi minggu itu, dan terus dikira dalam dashboard.</p>
+    <div class="lp-fgrid">
+      <label class="lp-field"><span>Pegawai</span><select class="dash-select" data-draw="borangPegawai" data-source="status" aria-label="Pegawai"></select></label>
+      <label class="lp-field"><span>Bulan</span>
+        <select class="dash-select" id="borang-bulan" aria-label="Bulan">
+          <option value="Ogos">Ogos</option>
+          <option value="September">September</option>
+          <option value="Oktober">Oktober</option>
+          <option value="November">November</option>
+          <option value="Disember">Disember</option>
+        </select>
+      </label>
+      <label class="lp-field"><span>Minggu</span><select class="dash-select" data-draw="borangMinggu" data-source="status" aria-label="Minggu"></select></label>
+    </div>
+    <div class="lp-finfo" data-draw="borangInfo"></div>
+    <label class="lp-field"><span>Pelaporan mingguan</span>
+      <textarea class="lp-textarea" id="borang-teks" rows="10" placeholder="1. Menghadiri mesyuarat unit&#10;2. Menyemak draf laporan&#10;3. ..."></textarea>
+    </label>
+    <div class="lp-factions">
+      <button class="lp-btn primary" type="button" id="borang-simpan">Simpan laporan</button>
+      <button class="lp-btn" type="button" id="borang-nombor">Nomborkan baris</button>
+      <button class="lp-btn" type="button" id="borang-batal">Batal perubahan</button>
+      <span class="lp-msgs" id="borang-mesej" role="status">
+        <span class="muted" data-m="simpan" hidden>Menyimpan…</span>
+        <span class="ok" data-m="ok" hidden>✓ Laporan disimpan dan dashboard dikemas kini.</span>
+        <span class="bad" data-m="gagal" hidden>Laporan tidak disimpan. Semak sambungan internet atau kod akses, kemudian cuba lagi.</span>
+        <span class="bad" data-m="kosong" hidden>Tulis sekurang-kurangnya satu tugasan sebelum menyimpan.</span>
+      </span>
+    </div>
+  </section>
+
+  <section class="lp-card" id="ikut-bulan">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg></span><h2>Pencapaian mengikut bulan</h2></div>
+    <p class="lp-desc">Peratus laporan dihantar berbanding laporan wajib bagi minggu yang sudah bermula dalam setiap bulan.</p>
+    <div class="lp-months" data-draw="bulanKad" data-source="bulan"></div>
+  </section>
+
+  <section class="lp-card" id="carta-minggu">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span><h2>Kadar penghantaran mengikut minggu</h2></div>
+    <p class="lp-desc">Peratus pegawai bertugas yang menghantar laporan setiap minggu. Bar hijau bermaksud semua pegawai menghantar; minggu akan datang ditunjukkan bergaris putus.</p>
+    <div class="lp-chart" data-draw="chartMinggu" data-source="minggu"></div>
+  </section>
+
+  <section class="lp-card" id="peta-status">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></span><h2>Status laporan setiap pegawai</h2></div>
+    <p class="lp-desc">Setiap petak ialah satu minggu. Klik petak untuk membaca laporan minggu tersebut.</p>
+    <div class="lp-ctrl">
+      <select class="dash-select" id="tapis-bulan" aria-label="Tapis bulan">
+        <option value="">Semua bulan</option>
+        <option value="Ogos">Ogos</option>
+        <option value="September">September</option>
+        <option value="Oktober">Oktober</option>
+        <option value="November">November</option>
+        <option value="Disember">Disember</option>
+      </select>
+      <input class="lp-input" id="tapis-nama" type="search" placeholder="Cari nama pegawai…" aria-label="Cari nama pegawai">
+    </div>
+    <div class="lp-legend">
+      <span><i class="lp-sw lp-s-Dihantar"></i>Dihantar</span>
+      <span><i class="lp-sw lp-s-Belum-dihantar"></i>Belum dihantar</span>
+      <span><i class="lp-sw lp-s-Diisi-awal"></i>Diisi awal</span>
+      <span><i class="lp-sw lp-s-Akan-datang"></i>Akan datang</span>
+      <span><i class="lp-sw lp-s-Belum-bertugas"></i>Belum bertugas di sektor</span>
+      <span><i class="lp-sw-warn"></i>Ditanda ✅ dalam Rumusan tanpa isi</span>
+    </div>
+    <div class="lp-scroll" data-draw="heatmap" data-source="status"></div>
+  </section>
+
+  <section class="lp-card" id="carta-pegawai">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0M17 11l2 2 4-4"/></svg></span><h2>Kadar penghantaran mengikut pegawai</h2></div>
+    <p class="lp-desc">Laporan dihantar berbanding minggu wajib (sejak mula bertugas hingga minggu semasa), disusun dari kadar terendah. Klik bar untuk membuka minggu yang belum dihantar.</p>
+    <div class="lp-chart" data-draw="chartPegawai" data-source="pegawai"></div>
+  </section>
+
+  <section class="lp-card" id="baca-laporan">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4h7a3 3 0 0 1 3 3v14a2 2 0 0 0-2-2H2zM22 4h-7a3 3 0 0 0-3 3v14a2 2 0 0 1 2-2h8z"/></svg></span><h2>Baca laporan mingguan</h2></div>
+    <p class="lp-desc">Pilih pegawai dan minggu, klik petak pada jalur di bawah, atau klik petak pada peta status di atas.</p>
+    <div class="lp-view-ctrl">
+      <select class="dash-select" data-draw="pilihPegawai" aria-label="Pilih pegawai" data-source="status"></select>
+      <select class="dash-select" data-draw="pilihMinggu" aria-label="Pilih minggu" data-source="status"></select>
+      <div class="lp-nav">
+        <button class="lp-btn" type="button" id="minggu-sebelum" aria-label="Minggu sebelumnya">‹ Sebelum</button>
+        <button class="lp-btn" type="button" id="minggu-seterus" aria-label="Minggu seterusnya">Seterus ›</button>
+      </div>
+    </div>
+    <div class="lp-strip" data-draw="jalurMinggu" data-source="status"></div>
+    <div class="lp-meta" data-draw="viewMeta"></div>
+    <div data-draw="viewTeks"></div>
+  </section>
+
+  <section class="lp-card lp-warncard" id="senarai-semak">
+    <div class="lp-sechead"><span class="lp-ico warn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01"/></svg></span><h2>Perlu disemak dalam Rumusan</h2></div>
+    <p class="lp-desc">Sel ini ditanda ✅ dalam tab RUMUSAN LAPORAN, tetapi tab pegawai hanya mengandungi templat bernombor atau ruang kosong. Dashboard tidak mengiranya sebagai dihantar.</p>
+    <div class="lp-chips" data-draw="palsuList" data-source="status"></div>
+  </section>
+
+  <section class="lp-card" id="carian">
+    <div class="lp-sechead"><span class="lp-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></span><h2>Cari dalam semua laporan</h2></div>
+    <p class="lp-desc">Taip kata kunci, contohnya "Bengkel", "SKT" atau "tesis", untuk mencari dalam laporan semua pegawai.</p>
+    <div class="lp-ctrl">
+      <input class="lp-input" id="kata-kunci" type="search" placeholder="Kata kunci…" aria-label="Kata kunci carian">
+    </div>
+    <div class="lp-count" data-draw="carianKiraan"></div>
+    <div class="lp-results" data-draw="carianHasil" data-source="gabung"></div>
+  </section>
+
+  <details id="nota">
+    <summary>Nota dan definisi</summary>
+    <ul>
+      <li><b>Dihantar</b>: ruang Pelaporan Mingguan dalam tab pegawai mengandungi sekurang-kurangnya satu catatan sebenar. Templat bernombor kosong (1. 2. 3. …) atau ruang kosong tidak dikira.</li>
+      <li><b>Minggu semasa</b> ialah minggu terakhir yang sudah bermula mengikut tarikh hari ini (waktu Malaysia). Minggu semasa dikira sebagai minggu wajib.</li>
+      <li><b>Kadar penghantaran</b> = laporan dihantar ÷ minggu wajib. Minggu wajib ialah minggu yang sudah bermula sejak pegawai mula bertugas di sektor.</li>
+      <li><b>Minggu lengkap 100%</b>: minggu yang sudah bermula dan semua pegawai bertugas telah menghantar laporan.</li>
+      <li>Baris Bil. 12 (dilabel "KOSONG 3" dan tersembunyi dalam Rumusan) dipautkan ke tab PN. ZURIATI. Dashboard ini memaparkannya sebagai Pn. Zuriati, bertugas mulai Oktober Minggu 4 (26 Oktober 2026).</li>
+      <li>Baris Bil. 20 (KOSONG 5) ialah slot kosong dan tidak dipaparkan.</li>
+      <li>Data awal diambil daripada fail Excel Rekod Pelaporan Mingguan (20 November 2026). Laporan yang ditulis melalui borang disimpan dalam Google Sheet SDP dan menggantikan isi fail Excel bagi minggu yang sama.</li>
+    </ul>
+  </details>
+  <p class="lp-foot"><span id="masa-data"></span> · <button type="button" class="lp-linkbtn" id="keluar">Keluar / tukar kod akses</button></p>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
