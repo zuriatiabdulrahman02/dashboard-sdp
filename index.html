@@ -197,13 +197,20 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
 .lp-chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 1.6em; }
 .lp details summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
 .lp details ul { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; }
-#sudah-hantar { --kad-bg: color-mix(in srgb, #4ADE80 16%, var(--color-panel)); background: var(--kad-bg); border-color: color-mix(in srgb, #4ADE80 45%, var(--color-border-line)); }
-#belum-hantar { --kad-bg: color-mix(in srgb, #F87171 14%, var(--color-panel)); background: var(--kad-bg); border-color: color-mix(in srgb, #F87171 45%, var(--color-border-line)); }
-#sudah-hantar .lp-av.ok { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px var(--lp-ok); }
-#belum-hantar .lp-av.bad { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px var(--lp-bad); }
-#sudah-hantar .lp-count-badge { background: color-mix(in srgb, #4ADE80 30%, transparent); }
-#belum-hantar .lp-count-badge { background: color-mix(in srgb, #F87171 28%, transparent); }
-#sudah-hantar .lp-person:hover, #belum-hantar .lp-person:hover { background: color-mix(in srgb, var(--color-panel) 55%, transparent); }
+#sudah-hantar, #belum-hantar { color: #14213D; }
+#sudah-hantar { --kad-bg: #E3F7EA; background: var(--kad-bg); border-color: #A7E3BC; }
+#belum-hantar { --kad-bg: #FDE8E8; background: var(--kad-bg); border-color: #F5B5B5; }
+#sudah-hantar .lp-desc, #belum-hantar .lp-desc { color: #4B5563; }
+#sudah-hantar .lp-person, #belum-hantar .lp-person { color: #14213D; }
+#sudah-hantar .lp-person span, #belum-hantar .lp-person span { color: #374151; }
+#sudah-hantar .lp-ico.ok { background: #BFEBCF; color: #15803D; }
+#belum-hantar .lp-ico.bad { background: #F9CACA; color: #B91C1C; }
+#sudah-hantar .lp-av.ok { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px #16A34A; }
+#belum-hantar .lp-av.bad { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px #DC2626; }
+#sudah-hantar .lp-count-badge { background: #BFEBCF; color: #14532D; }
+#belum-hantar .lp-count-badge { background: #F9CACA; color: #7F1D1D; }
+#sudah-hantar .lp-person:hover, #belum-hantar .lp-person:hover { background: rgba(255,255,255,.6); }
+#sudah-hantar .lp-empty, #belum-hantar .lp-empty { color: #4B5563; }
 .lp-form { border-top: 4px solid var(--lp-blue); }
 .lp-fgrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 2fr); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
 @media (max-width: 640px) { .lp-fgrid { grid-template-columns: 1fr; } }
