@@ -923,6 +923,8 @@ document.querySelectorAll('#minggu-seterus').forEach((b) => b.addEventListener('
 
 
 // ---------- Kod akses dan muat data ----------
+// Pegawai yang tidak lagi dipaparkan dalam dashboard (padankan sebahagian nama, huruf besar).
+const DIKECUALIKAN = ['NUR ADIBAH BINTI ABDUL LATIF'];
 const pintu = document.getElementById('pintu');
 const pintuRalat = document.getElementById('pintu-ralat');
 const pintuMasuk = document.getElementById('pintu-masuk');
@@ -932,6 +934,7 @@ async function muatData(kod) {
   const res = await fetch(SDP.url + '?kod=' + encodeURIComponent(kod) + '&t=' + Date.now());
   const j = await res.json();
   if (!j.ok) throw new Error(j.ralat || 'Data tidak dapat dimuatkan.');
+  j.rows = (j.rows || []).filter((r) => !DIKECUALIKAN.some((n) => String(r.nama || '').toUpperCase().includes(n)));
   return j;
 }
 function paparMasa(iso) {
