@@ -197,6 +197,13 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
 .lp-chips { display: flex; flex-wrap: wrap; gap: 8px; min-height: 1.6em; }
 .lp details summary { cursor: pointer; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); }
 .lp details ul { font-size: var(--cds-font-size-caption); color: var(--color-fg-muted); line-height: 1.6; }
+#sudah-hantar { --kad-bg: color-mix(in srgb, #4ADE80 16%, var(--color-panel)); background: var(--kad-bg); border-color: color-mix(in srgb, #4ADE80 45%, var(--color-border-line)); }
+#belum-hantar { --kad-bg: color-mix(in srgb, #F87171 14%, var(--color-panel)); background: var(--kad-bg); border-color: color-mix(in srgb, #F87171 45%, var(--color-border-line)); }
+#sudah-hantar .lp-av.ok { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px var(--lp-ok); }
+#belum-hantar .lp-av.bad { box-shadow: 0 0 0 3px var(--kad-bg), 0 0 0 5px var(--lp-bad); }
+#sudah-hantar .lp-count-badge { background: color-mix(in srgb, #4ADE80 30%, transparent); }
+#belum-hantar .lp-count-badge { background: color-mix(in srgb, #F87171 28%, transparent); }
+#sudah-hantar .lp-person:hover, #belum-hantar .lp-person:hover { background: color-mix(in srgb, var(--color-panel) 55%, transparent); }
 .lp-form { border-top: 4px solid var(--lp-blue); }
 .lp-fgrid { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 2fr); gap: var(--cds-gap-md); margin-bottom: var(--cds-gap-md); }
 @media (max-width: 640px) { .lp-fgrid { grid-template-columns: 1fr; } }
