@@ -39,20 +39,8 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
 .lp-pillbtn:hover { background: rgba(255,255,255,.22); }
 .lp-foot { text-align: center; color: var(--color-fg-muted); font-size: var(--cds-font-size-caption); margin: 0; }
 .lp-linkbtn { background: none; border: 0; color: #2E75B6; font: inherit; cursor: pointer; text-decoration: underline; padding: 0; }
-/* Skrin kod akses */
-.pintu { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 16px;
-  background: radial-gradient(circle at 85% 10%, rgba(255,255,255,.12) 0 140px, transparent 141px), linear-gradient(135deg, #12304D 0%, #1F4E79 50%, #2E75B6 100%); }
-.pintu[hidden] { display: none; }
-.pintu-kad { width: min(420px, 100%); background: var(--color-panel); color: var(--color-fg); border-radius: 18px; padding: 32px 28px; box-shadow: 0 20px 60px rgba(0,0,0,.35); text-align: center; }
-.pintu-kad h1 { font-family: var(--font-anthropic-serif); font-weight: 400; font-size: 26px; margin: 10px 0 6px; line-height: 1.2; }
-.pintu-kad p { color: var(--color-fg-muted); font-size: 14px; margin: 0 0 18px; }
-.pintu-logo { width: 56px; height: 56px; border-radius: 16px; margin: 0 auto; display: grid; place-items: center; background: #1F4E79; color: #fff; }
-.pintu-kad input { width: 100%; font: inherit; font-size: 16px; padding: 12px 16px; border-radius: 12px; border: 1px solid var(--color-border-line); background: var(--color-bg); color: var(--color-fg); text-align: center; letter-spacing: .05em; }
-.pintu-kad input:focus { outline: 2px solid #2E75B6; outline-offset: 1px; }
-.pintu-kad button { width: 100%; margin-top: 12px; font: inherit; font-weight: 600; font-size: 15px; padding: 12px; border: 0; border-radius: 12px; background: #1F4E79; color: #fff; cursor: pointer; }
-.pintu-kad button:hover { background: #2E75B6; }
-.pintu-kad button:disabled { opacity: .6; cursor: wait; }
-.pintu-ralat { color: var(--color-bad) !important; font-size: 13px !important; margin: 12px 0 0 !important; min-height: 1.2em; }
+.lp-sambung { background: #FEF2F2; color: #991B1B; border: 1px solid #FCA5A5; border-radius: 12px; padding: 12px 16px; font-size: 14px; }
+.lp-sambung[hidden] { display: none; }
 .lp { --lp-navy: #1F4E79; --lp-deep: #12304D; --lp-blue: #2E75B6; --lp-mint: #6EE7A8; --lp-amber: #F5B942;
   --lp-ok: var(--color-ok); --lp-bad: var(--color-bad); --lp-warn: var(--color-warn);
   display: flex; flex-direction: column; gap: var(--cds-gap-xl); }
@@ -217,18 +205,9 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
 </style>
 </head>
 <body>
-<div class="pintu" id="pintu">
-  <form class="pintu-kad" id="pintu-borang" autocomplete="off">
-    <div class="pintu-logo"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></div>
-    <h1>Pelaporan Mingguan SDP</h1>
-    <p>Sektor Dokumentasi Pendidikan, BPPDP. Masukkan kod akses yang diberikan kepada warga SDP.</p>
-    <input id="pintu-kod" type="password" placeholder="Kod akses" aria-label="Kod akses" required>
-    <button type="submit" id="pintu-masuk">Masuk</button>
-    <p class="pintu-ralat" id="pintu-ralat" role="alert"></p>
-  </form>
-</div>
 <main class="wadah">
 <div class="lp" lang="ms">
+  <div class="lp-sambung" id="ralat-sambung" role="alert" hidden></div>
   <header class="lp-hero" id="tajuk">
     <div>
       <p class="lp-kicker">BPPDP · Kementerian Pendidikan Malaysia</p>
@@ -309,7 +288,7 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
       <span class="lp-msgs" id="borang-mesej" role="status">
         <span class="muted" data-m="simpan" hidden>Menyimpan…</span>
         <span class="ok" data-m="ok" hidden>✓ Laporan disimpan dan dashboard dikemas kini.</span>
-        <span class="bad" data-m="gagal" hidden>Laporan tidak disimpan. Semak sambungan internet atau kod akses, kemudian cuba lagi.</span>
+        <span class="bad" data-m="gagal" hidden>Laporan tidak disimpan. Semak sambungan internet, kemudian cuba lagi.</span>
         <span class="bad" data-m="kosong" hidden>Tulis sekurang-kurangnya satu tugasan sebelum menyimpan.</span>
       </span>
     </div>
@@ -402,7 +381,7 @@ body { margin: 0; background: var(--halaman); color: var(--color-fg); font-famil
       <li>Data awal diambil daripada fail Excel Rekod Pelaporan Mingguan (20 November 2026). Laporan yang ditulis melalui borang disimpan dalam Google Sheet SDP dan menggantikan isi fail Excel bagi minggu yang sama.</li>
     </ul>
   </details>
-  <p class="lp-foot"><span id="masa-data"></span> · <button type="button" class="lp-linkbtn" id="keluar">Keluar / tukar kod akses</button></p>
+  <p class="lp-foot"><span id="masa-data"></span></p>
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>

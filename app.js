@@ -1,11 +1,9 @@
 /* Dashboard Pelaporan Mingguan SDP – versi GitHub Pages + Google Apps Script */
 'use strict';
 const SDP = {
-  url: (window.SDP_CONFIG && window.SDP_CONFIG.SCRIPT_URL) || '',
-  kod: () => { try { return localStorage.getItem('sdp-kod') || ''; } catch (e) { return SDP._kod || ''; } },
-  simpanKod: (k) => { SDP._kod = k; try { localStorage.setItem('sdp-kod', k); } catch (e) { /* abaikan */ } },
-  buangKod: () => { SDP._kod = ''; try { localStorage.removeItem('sdp-kod'); } catch (e) { /* abaikan */ } }
+  url: (window.SDP_CONFIG && window.SDP_CONFIG.SCRIPT_URL) || ''
 };
+try { localStorage.removeItem('sdp-kod'); } catch (e) { /* kod lama tidak digunakan lagi */ }
 
 // Lapisan kecil yang menguruskan data, kiraan dan lukisan halaman.
 const dash = (() => {
@@ -713,7 +711,7 @@ async function simpanBorang() {
   document.querySelectorAll('#borang-simpan').forEach((b) => { b.disabled = true; });
   let ok = true;
   try {
-    const res = await fetch(SDP.url, { method: 'POST', body: JSON.stringify({ kod: SDP.kod(), kunci, teks }) });
+    const res = await fetch(SDP.url, { method: 'POST', body: JSON.stringify({ kunci, teks }) });
     const j = await res.json();
     if (!j.ok) throw new Error(j.ralat || 'Gagal');
     const rows = dash.data('laporan').data.map((r) => (r.kunci === kunci ? { ...r, teks: j.teks, isi: j.isi, sumber: j.sumber, dikemaskini: j.dikemaskini } : r));
@@ -756,48 +754,46 @@ document.querySelectorAll('#minggu-sebelum').forEach((b) => b.addEventListener('
 document.querySelectorAll('#minggu-seterus').forEach((b) => b.addEventListener('click', () => langkah(1)));
 
 
-// ---------- Kod akses dan muat data ----------
-const pintu = document.getElementById('pintu');
-const pintuRalat = document.getElementById('pintu-ralat');
-const pintuMasuk = document.getElementById('pintu-masuk');
+// ---------- Muat data (tanpa kod akses) ----------
+const ralatSambung = document.getElementById('ralat-sambung');
 let mataMuat = 0;
-async function muatData(kod) {
+async function muatData() {
   if (!SDP.url || /PASTE|TAMPAL/.test(SDP.url)) throw new Error('URL Apps Script belum ditetapkan dalam config.js.');
-  const res = await fetch(SDP.url + '?kod=' + encodeURIComponent(kod) + '&t=' + Date.now());
-  const j = await res.json();
+  let res;
+  try { res = await fetch(SDP.url + '?t=' + Date.now()); }
+  catch (e) { throw new Error('Tidak dapat menyambung ke pelayan data. Semak sambungan internet atau tetapan deployment Apps Script.'); }
+  let j;
+  try { j = await res.json(); } catch (e) { throw new Error('Pelayan data tidak memberi jawapan yang sah. Semak tetapan deployment Apps Script.'); }
   if (!j.ok) throw new Error(j.ralat || 'Data tidak dapat dimuatkan.');
   return j;
+}
+function paparRalat(m) {
+  if (!ralatSambung) return;
+  ralatSambung.textContent = m ? 'Data tidak dapat dimuatkan. ' + m : '';
+  ralatSambung.hidden = !m;
 }
 function paparMasa(iso) {
   const el = document.getElementById('masa-data'); if (!el) return;
   const d = iso ? new Date(iso) : new Date();
   el.textContent = 'Data dimuatkan ' + d.toLocaleString('ms-MY', { timeZone: 'Asia/Kuala_Lumpur', dateStyle: 'medium', timeStyle: 'short' });
 }
-async function masuk(kod, senyap) {
-  pintuMasuk.disabled = true; pintuRalat.textContent = senyap ? '' : 'Memuatkan data…';
+async function muat() {
   try {
-    const j = await muatData(kod);
-    SDP.simpanKod(kod);
-    pintu.hidden = true; pintuRalat.textContent = '';
+    const j = await muatData();
+    paparRalat('');
     dash.set('laporan', { status: 'ok', data: j.rows });
     dash.runAll(); paparMasa(j.masa);
   } catch (e) {
-    pintu.hidden = false; pintuRalat.textContent = e.message || 'Tidak dapat menyambung. Cuba lagi.';
-    if (/Kod akses/.test(e.message || '')) SDP.buangKod();
-  } finally { pintuMasuk.disabled = false; }
+    paparRalat(e.message || 'Cuba lagi.');
+    dash.set('laporan', { status: 'error', data: [] }); dash.runAll();
+  }
 }
-document.getElementById('pintu-borang').addEventListener('submit', (ev) => {
-  ev.preventDefault(); const k = document.getElementById('pintu-kod').value.trim(); if (k) masuk(k, false);
-});
-document.getElementById('keluar').addEventListener('click', () => { SDP.buangKod(); location.reload(); });
 document.getElementById('muat-semula').addEventListener('click', async (ev) => {
   const b = ev.currentTarget; b.disabled = true; const asal = b.textContent; b.textContent = 'Memuatkan…';
-  try { const j = await muatData(SDP.kod()); dash.set('laporan', { status: 'ok', data: j.rows }); dash.runAll(); paparMasa(j.masa); }
-  catch (e) { alert(e.message || 'Data tidak dapat dimuatkan.'); }
-  finally { b.disabled = false; b.textContent = asal; }
+  await muat();
+  b.disabled = false; b.textContent = asal;
 });
 window.addEventListener('resize', () => { clearTimeout(mataMuat); mataMuat = setTimeout(() => { dash.draw('chartMinggu'); dash.draw('chartPegawai'); }, 200); });
 
 dash.runAll();
-if (SDP.kod()) { pintu.hidden = true; masuk(SDP.kod(), true); }
-else document.getElementById('pintu-kod').focus();
+muat();
