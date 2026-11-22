@@ -1,0 +1,92 @@
+1
+00:00:00,000 --> 00:00:03,410
+USR is the Repository Systems Unit.
+
+2
+00:00:03,510 --> 00:00:06,976
+It manages the education repository and the
+
+3
+00:00:07,026 --> 00:00:10,820
+integrated library management system, or EKCMS.
+
+4
+00:00:10,920 --> 00:00:16,980
+Its work also covers library ICT equipment, networks, and security systems.
+
+5
+00:00:17,080 --> 00:00:21,239
+The unit page brings together its functions, monitoring dashboard,
+
+6
+00:00:21,289 --> 00:00:25,640
+annual work targets, programmes, activities, and contact information.
+
+7
+00:00:35,120 --> 00:00:39,261
+The USR Operations Monitoring Dashboard shows record totals,
+
+8
+00:00:39,311 --> 00:00:44,010
+issues that need follow-up, and monitoring activity over six months.
+
+9
+00:00:44,110 --> 00:00:50,130
+In the Apa yang berlaku section, select Dalam tindakan to focus on open items.
+
+10
+00:00:50,230 --> 00:00:52,604
+You can also filter by category, such as EKCMS.
+
+11
+00:00:52,704 --> 00:00:56,056
+Authorised officers can use the full dashboard to
+
+12
+00:00:56,106 --> 00:00:59,250
+update records and upload supporting evidence.
+
+13
+00:01:13,100 --> 00:01:15,627
+Under USR, open Pelaporan Mingguan SDP.
+
+14
+00:01:15,727 --> 00:01:21,190
+Staff can choose the officer, month, and week to enter a report.
+
+15
+00:01:21,290 --> 00:01:24,111
+Submission summaries show which reports are in
+
+16
+00:01:24,161 --> 00:01:27,170
+and which are still due, making follow-up easier.
+
+17
+00:01:27,270 --> 00:01:30,755
+To review earlier work, select a week in the reading panel
+
+18
+00:01:30,805 --> 00:01:34,350
+or search for a keyword, such as bengkel, meaning workshop.
+
+19
+00:01:48,120 --> 00:01:54,600
+The annual work targets section shows achievements for 2026 and targets for 2027.
+
+20
+00:01:54,700 --> 00:01:59,240
+Open SKT 2026 for details on targets and progress by unit.
+
+21
+00:02:08,190 --> 00:02:12,350
+Quick quiz. Where do you check for outstanding weekly reports? A.
+
+22
+00:02:12,400 --> 00:02:16,690
+Operations Monitoring, B. Annual Work Targets, C. Weekly Reporting.
+
+23
+00:02:26,020 --> 00:02:30,000
+The answer is C, Weekly Reporting.
+

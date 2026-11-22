@@ -1,0 +1,84 @@
+1
+00:00:00,000 --> 00:00:03,969
+Welcome to PEKa@SDP 2.0, the Electronic Information
+
+2
+00:00:04,019 --> 00:00:08,460
+Collection Portal for the Education Documentation Sector.
+
+3
+00:00:08,560 --> 00:00:11,551
+Here, you can explore documentation resources,
+
+4
+00:00:11,601 --> 00:00:14,460
+sector activities, and information services.
+
+5
+00:00:20,110 --> 00:00:22,060
+Meet the four units.
+
+6
+00:00:22,160 --> 00:00:26,060
+USR, the Repository Systems Unit, manages and coordinates the
+
+7
+00:00:26,110 --> 00:00:30,464
+education repository for the Ministry of Education Reference Centre.
+
+8
+00:00:30,564 --> 00:00:36,160
+UPPM coordinates publishing and the dissemination of education information.
+
+9
+00:00:36,260 --> 00:00:41,520
+UPKualiti oversees quality management and monitors performance indicators.
+
+10
+00:00:41,620 --> 00:00:47,090
+UPKoleksi develops and manages reference collections and information resources.
+
+11
+00:00:47,190 --> 00:00:49,700
+Select Lihat Unit to learn more about each unit.
+
+12
+00:01:10,120 --> 00:01:15,410
+Start with quick links such as Rak Maya, e-Artikel, and U-Pustaka.
+
+13
+00:01:15,510 --> 00:01:18,224
+On the home page, the annual work targets
+
+14
+00:01:18,274 --> 00:01:21,190
+summary shows how the sector is progressing.
+
+15
+00:01:21,290 --> 00:01:23,790
+Select a unit for more detail.
+
+16
+00:01:23,890 --> 00:01:27,248
+If you have a question about the units or the Ministry
+
+17
+00:01:27,298 --> 00:01:30,340
+of Education Library, try the PEKa@SDP Assistant.
+
+18
+00:01:55,210 --> 00:02:00,097
+Quick quiz. Which unit manages the education
+
+19
+00:02:00,147 --> 00:02:04,810
+repository? A. UPPM, B. USR, C. UPKoleksi.
+
+20
+00:02:14,020 --> 00:02:20,000
+The answer is B, the Repository Systems Unit.
+
+21
+00:02:20,100 --> 00:02:24,830
+In the next video, we will explore the USR page and its monitoring dashboards.
+

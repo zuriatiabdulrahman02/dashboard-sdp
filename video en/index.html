@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PEKa@SDP Videos</title>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Pemain video interaktif PEKa@SDP: kuiz boleh klik terus pada pilihan dalam video */
+:root{--navy:#0b2545;--gold:#c9a44a;--ok:#2e8b57;--bad:#c0392b}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:transparent;font:16px/1.5 "Public Sans",system-ui,Arial,sans-serif;color:#14213a}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 10px}
+.tabs button{min-height:44px;padding:0 18px;border-radius:999px;border:2px solid var(--navy);background:#fff;color:var(--navy);font:700 15px "Public Sans",Arial,sans-serif;cursor:pointer}
+.tabs button[aria-pressed=true]{background:var(--navy);color:#fff}
+.tabs button:focus-visible,.pil:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.skrin{position:relative;aspect-ratio:16/9;background:var(--navy);border-radius:12px;overflow:hidden}
+video{position:absolute;inset:0;width:100%;height:100%;display:block}
+.kuiz{position:absolute;inset:0;display:none}
+.kuiz.on{display:block}
+.pil{position:absolute;left:20.83%;width:58.33%;height:8.9%;border-radius:999px;border:0;background:transparent;cursor:pointer}
+.pil:hover{box-shadow:0 0 0 4px var(--gold) inset}
+.pil.betul{box-shadow:0 0 0 5px var(--ok) inset}
+.pil.salah{box-shadow:0 0 0 5px var(--bad) inset}
+.mb{position:absolute;left:50%;bottom:6%;transform:translateX(-50%);background:#fff;color:var(--navy);padding:10px 22px;border-radius:999px;font-weight:800;font-size:clamp(13px,1.8vw,20px);box-shadow:0 6px 20px rgba(0,0,0,.3);white-space:nowrap;display:none}
+.mb.on{display:block}
+.arah{position:absolute;right:3%;top:44%;width:17%;text-align:center;color:#fff;font-weight:700;font-size:clamp(11px,1.3vw,16px);background:rgba(11,37,69,.92);border:2px solid var(--gold);border-radius:12px;padding:10px 8px}
+.arah button{margin-top:8px;min-height:36px;padding:0 12px;border-radius:999px;border:0;background:var(--gold);color:var(--navy);font:800 13px "Public Sans",Arial,sans-serif;cursor:pointer}
+p.nota{margin:8px 2px 0;font-size:13px;color:#55606e}
+</style></head><body>
+<div class="tabs" role="tablist">
+  <button type="button" data-v="0" aria-pressed="true">Video 1: Discover PEKa@SDP 2.0</button>
+  <button type="button" data-v="1" aria-pressed="false">Video 2: USR and Its Dashboards</button>
+</div>
+<div class="skrin">
+  <video id="vid" controls playsinline preload="metadata"></video>
+  <div class="kuiz" id="kuiz">
+    <button class="pil" data-k="A" style="top:30.7%" aria-label="Pilihan A"></button>
+    <button class="pil" data-k="B" style="top:41.7%" aria-label="Pilihan B"></button>
+    <button class="pil" data-k="C" style="top:52.6%" aria-label="Pilihan C"></button>
+    <div class="arah" id="arah">Click your answer on screen<br><button type="button" id="langkau">Show answer</button></div>
+    <div class="mb" id="mb"></div>
+  </div>
+</div>
+<p class="nota">Narrated video with English subtitles. During the quiz, the video pauses so you can click an answer.</p>
+<script>
+{
+// Ubah nama fail di sini jika video disimpan di tempat lain.
+const V=[
+  {src:'Video1_Discover_PEKa_SDP_EN.mp4', papar:115.3, henti:125.0, dedah:134.1, betul:'B', jwp:'The answer is B, the Repository Systems Unit.'},
+  {src:'Video2_USR_Dashboards_EN.mp4', papar:128.3, henti:136.9, dedah:146.1, betul:'C', jwp:'The answer is C, Weekly Reporting.'}
+];
+const vid=document.getElementById('vid'), kuiz=document.getElementById('kuiz'), mb=document.getElementById('mb'), arah=document.getElementById('arah');
+let cur=0, dijawab=false, berhenti=false;
+function muat(i){
+  cur=i; dijawab=false; berhenti=false; vid.src=V[i].src; vid.load(); tutup();
+  document.querySelectorAll('.tabs button').forEach(b=>b.setAttribute('aria-pressed',+b.dataset.v===i));
+}
+function tutup(){ kuiz.classList.remove('on'); mb.classList.remove('on'); arah.hidden=false; document.querySelectorAll('.pil').forEach(p=>p.className='pil'); }
+function jawab(k){
+  if(dijawab) return; dijawab=true; const v=V[cur];
+  document.querySelectorAll('.pil').forEach(p=>{ if(p.dataset.k===v.betul) p.classList.add('betul'); else if(p.dataset.k===k) p.classList.add('salah'); });
+  mb.textContent=(k===v.betul?'Correct! ':k?'Not quite. ':'')+v.jwp; mb.classList.add('on'); arah.hidden=true;
+  setTimeout(()=>{ vid.currentTime=v.dedah; vid.play().catch(()=>{}); setTimeout(tutup,2500); },1600);
+}
+vid.addEventListener('timeupdate',()=>{
+  const v=V[cur], t=vid.currentTime;
+  if(t>=v.papar && t<v.dedah && !dijawab) kuiz.classList.add('on');
+  if(t>=v.henti && t<v.dedah && !dijawab && !berhenti){ berhenti=true; vid.pause(); }
+  if(t<v.papar-1){ dijawab=false; berhenti=false; tutup(); }
+});
+document.querySelectorAll('.pil').forEach(p=>p.addEventListener('click',()=>jawab(p.dataset.k)));
+document.getElementById('langkau').addEventListener('click',()=>jawab(''));
+document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>muat(+b.dataset.v)));
+muat(0);
+}
+</script>
+</body></html>
